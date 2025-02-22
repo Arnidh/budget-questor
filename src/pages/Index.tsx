@@ -3,6 +3,10 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { ExpenseChart } from "@/components/ExpenseChart";
+import { AuthForm } from "@/components/AuthForm";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut } from "lucide-react";
 
 interface Expense {
   id: number;
@@ -12,6 +16,7 @@ interface Expense {
 }
 
 const Index = () => {
+  const { user, signOut, isLoading } = useAuth();
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, category: "Food & Dining", amount: 25.50, date: "2024-03-15" },
     { id: 2, category: "Transportation", amount: 15.00, date: "2024-03-15" },
@@ -25,17 +30,49 @@ const Index = () => {
     ]);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary p-4 md:p-8">
+        <div className="container mx-auto max-w-md space-y-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold tracking-tight">Budget Questor</h1>
+            <p className="text-muted-foreground">Sign in to track your expenses</p>
+          </div>
+          <AuthForm />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary p-4 md:p-8">
       <main className="container mx-auto space-y-8 animate-fadeIn">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight text-balance">
-            Budget Questor
-          </h1>
-          <p className="text-muted-foreground">
-            Track your expenses, achieve your goals
-          </p>
+        {/* Header with Sign Out */}
+        <div className="flex justify-between items-center">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold tracking-tight text-balance">
+              Budget Questor
+            </h1>
+            <p className="text-muted-foreground">
+              Track your expenses, achieve your goals
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            onClick={signOut}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
         </div>
 
         {/* Quick Stats */}
