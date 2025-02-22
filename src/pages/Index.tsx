@@ -43,7 +43,7 @@ const Index = () => {
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary p-4 md:p-8">
         <div className="container mx-auto max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight">Budget Questor</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Budget Buddy</h1>
             <p className="text-muted-foreground">Sign in to track your expenses</p>
           </div>
           <AuthForm />
@@ -59,7 +59,7 @@ const Index = () => {
         <div className="flex justify-between items-center">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold tracking-tight text-balance">
-              Budget Questor
+              Budget Buddy
             </h1>
             <p className="text-muted-foreground">
               Track your expenses, achieve your goals
