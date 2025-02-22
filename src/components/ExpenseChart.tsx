@@ -18,6 +18,18 @@ export function ExpenseChart({ expenses }: ExpenseChartProps) {
     value: amount,
   }));
 
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background p-2 border rounded-lg shadow-lg">
+          <p className="font-medium">{payload[0].name}</p>
+          <p className="text-sm">₹{payload[0].value.toFixed(2)}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="w-full h-[300px] mt-8">
       <h3 className="text-xl font-semibold mb-4">Spending Breakdown</h3>
@@ -37,7 +49,7 @@ export function ExpenseChart({ expenses }: ExpenseChartProps) {
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>

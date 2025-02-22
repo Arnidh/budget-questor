@@ -18,9 +18,9 @@ interface Expense {
 const Index = () => {
   const { user, signOut, isLoading } = useAuth();
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, category: "Food & Dining", amount: 25.50, date: "2024-03-15" },
-    { id: 2, category: "Transportation", amount: 15.00, date: "2024-03-15" },
-    { id: 3, category: "Entertainment", amount: 50.00, date: "2024-03-14" },
+    { id: 1, category: "Food & Dining", amount: 1250.50, date: "2024-03-15" },
+    { id: 2, category: "Transportation", amount: 750.00, date: "2024-03-15" },
+    { id: 3, category: "Entertainment", amount: 2500.00, date: "2024-03-14" },
   ]);
 
   const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
@@ -80,16 +80,16 @@ const Index = () => {
           <Card className="p-6 glass-morphism card-hover">
             <h3 className="font-semibold text-sm text-muted-foreground">Total Spent</h3>
             <p className="text-2xl font-bold">
-              ${expenses.reduce((sum, exp) => sum + exp.amount, 0).toFixed(2)}
+              ₹{expenses.reduce((sum, exp) => sum + exp.amount, 0).toFixed(2)}
             </p>
           </Card>
           <Card className="p-6 glass-morphism card-hover">
             <h3 className="font-semibold text-sm text-muted-foreground">Budget Left</h3>
-            <p className="text-2xl font-bold text-mint-500">$750.50</p>
+            <p className="text-2xl font-bold text-mint-500">₹37,500.50</p>
           </Card>
           <Card className="p-6 glass-morphism card-hover">
             <h3 className="font-semibold text-sm text-muted-foreground">Savings</h3>
-            <p className="text-2xl font-bold">$1,234.00</p>
+            <p className="text-2xl font-bold">₹61,700.00</p>
           </Card>
         </div>
 
@@ -112,7 +112,7 @@ const Index = () => {
                     <p className="font-medium">{expense.category}</p>
                     <p className="text-sm text-muted-foreground">{expense.date}</p>
                   </div>
-                  <p className="text-lg font-semibold">${expense.amount.toFixed(2)}</p>
+                  <p className="text-lg font-semibold">₹{expense.amount.toFixed(2)}</p>
                 </div>
               </Card>
             ))}
