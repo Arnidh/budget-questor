@@ -9,10 +9,12 @@ declare global {
   }
 }
 
-const supabaseUrl = window.SUPABASE_URL;
-const supabaseAnonKey = window.SUPABASE_ANON_KEY;
+const supabaseUrl = window?.SUPABASE_URL;
+const supabaseAnonKey = window?.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("Supabase URL:", supabaseUrl);
+  console.error("Supabase Anon Key:", supabaseAnonKey);
   throw new Error("Missing Supabase environment variables - please make sure you've connected your project to Supabase");
 }
 
