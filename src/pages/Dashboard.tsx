@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ExpenseForm } from "@/components/ExpenseForm";
 import { ExpenseChart } from "@/components/ExpenseChart";
+import { DashboardStats } from "@/components/DashboardStats";
+import { ExpenseList } from "@/components/ExpenseList";
+import { PeriodHeader } from "@/components/PeriodHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -181,6 +183,12 @@ const Dashboard = () => {
         variant: "destructive",
       });
     }
+
+    // Update local state
+    setCurrentPeriod(prev => prev ? {
+      ...prev,
+      total_spent: prev.total_spent + newExpense.amount
+    } : null);
   };
 
   const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -188,57 +196,25 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Monthly Dashboard</h1>
-        <div className="text-sm text-muted-foreground">
-          Period: {currentPeriod?.start_date} to {currentPeriod?.end_date}
-        </div>
-      </div>
+      <PeriodHeader 
+        startDate={currentPeriod?.start_date} 
+        endDate={currentPeriod?.end_date}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6">
-          <h3 className="font-semibold text-sm text-muted-foreground">
-            Monthly Spent
-          </h3>
-          <p className="text-2xl font-bold">₹{totalSpent.toFixed(2)}</p>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-semibold text-sm text-muted-foreground">
-            Monthly Budget
-          </h3>
-          <p className="text-2xl font-bold">₹{budget?.amount.toFixed(2) || '0.00'}</p>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-semibold text-sm text-muted-foreground">
-            Budget Left
-          </h3>
-          <p className="text-2xl font-bold text-mint-500">₹{budgetLeft.toFixed(2)}</p>
-        </Card>
-      </div>
+      <DashboardStats
+        totalSpent={totalSpent}
+        budgetAmount={budget?.amount || 0}
+        budgetLeft={budgetLeft}
+      />
 
       <Card className="p-6">
         <ExpenseChart expenses={expenses} />
       </Card>
 
-      <section>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Recent Expenses</h2>
-          <ExpenseForm onSubmit={handleAddExpense} />
-        </div>
-        <div className="space-y-3">
-          {expenses.map((expense) => (
-            <Card key={expense.id} className="p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{expense.category}</p>
-                  <p className="text-sm text-muted-foreground">{expense.date}</p>
-                </div>
-                <p className="text-lg font-semibold">₹{expense.amount.toFixed(2)}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <ExpenseList 
+        expenses={expenses}
+        onAddExpense={handleAddExpense}
+      />
     </div>
   );
 };
