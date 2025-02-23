@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { ExpenseChart } from "@/components/ExpenseChart";
@@ -7,9 +7,11 @@ import { AuthForm } from "@/components/AuthForm";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface Expense {
-  id: number;
+  id: string;
   category: string;
   amount: number;
   date: string;
@@ -17,13 +19,56 @@ interface Expense {
 
 const Index = () => {
   const { user, signOut, isLoading } = useAuth();
-  const [expenses, setExpenses] = useState<Expense[]>([]);  // Initialize with empty array
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const { toast } = useToast();
 
-  const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
-    setExpenses((prev) => [
-      { ...newExpense, id: Math.max(0, ...prev.map((e) => e.id)) + 1 },
-      ...prev,
-    ]);
+  // Fetch expenses when component mounts
+  useEffect(() => {
+    if (user) {
+      fetchExpenses();
+    }
+  }, [user]);
+
+  const fetchExpenses = async () => {
+    const { data, error } = await supabase
+      .from('expenses')
+      .select('*')
+      .order('date', { ascending: false });
+
+    if (error) {
+      toast({
+        title: "Error fetching expenses",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setExpenses(data || []);
+  };
+
+  const handleAddExpense = async (newExpense: Omit<Expense, "id">) => {
+    const { data, error } = await supabase
+      .from('expenses')
+      .insert([
+        {
+          ...newExpense,
+          user_id: user?.id,
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      toast({
+        title: "Error adding expense",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setExpenses((prev) => [data, ...prev]);
   };
 
   if (isLoading) {
