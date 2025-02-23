@@ -17,11 +17,7 @@ interface Expense {
 
 const Index = () => {
   const { user, signOut, isLoading } = useAuth();
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, category: "Food & Dining", amount: 1250.50, date: "2024-03-15" },
-    { id: 2, category: "Transportation", amount: 750.00, date: "2024-03-15" },
-    { id: 3, category: "Entertainment", amount: 2500.00, date: "2024-03-14" },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);  // Initialize with empty array
 
   const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
     setExpenses((prev) => [
@@ -85,11 +81,11 @@ const Index = () => {
           </Card>
           <Card className="p-6 glass-morphism card-hover">
             <h3 className="font-semibold text-sm text-muted-foreground">Budget Left</h3>
-            <p className="text-2xl font-bold text-mint-500">₹37,500.50</p>
+            <p className="text-2xl font-bold text-mint-500">₹0.00</p>
           </Card>
           <Card className="p-6 glass-morphism card-hover">
             <h3 className="font-semibold text-sm text-muted-foreground">Savings</h3>
-            <p className="text-2xl font-bold">₹61,700.00</p>
+            <p className="text-2xl font-bold">₹0.00</p>
           </Card>
         </div>
 
