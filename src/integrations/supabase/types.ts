@@ -37,6 +37,7 @@ export type Database = {
           created_at: string
           date: string
           id: string
+          period_id: string | null
           user_id: string
         }
         Insert: {
@@ -45,6 +46,7 @@ export type Database = {
           created_at?: string
           date: string
           id?: string
+          period_id?: string | null
           user_id: string
         }
         Update: {
@@ -53,6 +55,42 @@ export type Database = {
           created_at?: string
           date?: string
           id?: string
+          period_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_period_id_fkey"
+            columns: ["period_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_periods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monthly_periods: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          start_date: string
+          total_spent: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          start_date: string
+          total_spent?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          start_date?: string
+          total_spent?: number
           user_id?: string
         }
         Relationships: []
